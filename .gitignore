@@ -1,0 +1,11 @@
+
+# MINT native build outputs
+*.mint-build.c
+*.mintc
+
+# Native build output
+bin/mint
+
+# Python cache from the legacy compatibility implementation
+__pycache__/
+mint/__pycache__/

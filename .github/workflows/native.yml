@@ -12,7 +12,7 @@ jobs:
       - name: Install build dependencies
         run: sudo apt-get update && sudo apt-get install -y build-essential pkg-config libsqlite3-dev
       - name: Strict native build
-        run: cc -std=c11 -O2 -Wall -Wextra -Werror runtime/mint.c -lm -o /tmp/mint
+        run: cc -std=c11 -O2 -Wall -Wextra -Werror runtime/kiln.c -lm -o /tmp/kiln
       - name: Native test suite
         run: make test
       - name: Install target smoke test

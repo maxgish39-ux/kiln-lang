@@ -1,11 +1,11 @@
 #!/bin/sh
-# One-command MINT setup for Linux Mint, Ubuntu and Debian.
+# One-command Kiln setup for Linux Kiln, Ubuntu and Debian.
 #
-#   ./setup.sh          install dependencies and MINT for the current user
+#   ./setup.sh          install dependencies and Kiln for the current user
 #   ./setup.sh --gui    also build the raylib graphics support
 #
 # Nothing is installed system-wide except the apt packages listed in
-# scripts/install-deps.sh. MINT itself goes to ~/.local.
+# scripts/install-deps.sh. Kiln itself goes to ~/.local.
 set -eu
 
 ROOT="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
@@ -30,12 +30,12 @@ make -C "$ROOT" install-user
 
 if [ "$GUI" -eq 1 ]; then
     make -C "$ROOT" raylib
-    echo "MINT: graphics support built. Try: mint examples/native_gui.mint"
+    echo "Kiln: graphics support built. Try: kiln examples/native_gui.kiln"
 fi
 
 echo
-echo "MINT is installed in ~/.local/bin."
+echo "Kiln is installed in ~/.local/bin."
 case ":$PATH:" in
-    *":$HOME/.local/bin:"*) echo "Run: mint --version" ;;
+    *":$HOME/.local/bin:"*) echo "Run: kiln --version" ;;
     *) echo "Add it to PATH once:  echo 'export PATH=\"\$HOME/.local/bin:\$PATH\"' >> ~/.bashrc  (then open a new terminal)" ;;
 esac

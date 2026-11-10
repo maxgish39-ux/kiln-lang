@@ -1,0 +1,9 @@
+let xs = []
+for (let i in range(200000)) {
+    xs.append(i * 2)
+}
+let s = 0
+for (let x in xs) {
+    s = s + x
+}
+print(s)

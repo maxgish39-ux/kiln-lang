@@ -1,0 +1,5 @@
+# Import and use a module written in Kiln itself
+import "examples/greeting_module.kiln" as greetings
+print(greetings.prefix)
+print(greetings.greet("Kiln"))
+greetings.repeat_greeting("ThePyguy", 2)

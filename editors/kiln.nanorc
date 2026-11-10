@@ -1,0 +1,14 @@
+# Syntax highlighting for Kiln (.kiln files) in GNU nano.
+# Install: copy this file to ~/.nano/kiln.nanorc, then add this line to ~/.nanorc:
+#   include "~/.nano/kiln.nanorc"
+
+syntax kiln "\.kiln$"
+color brightblue "\<(let|fun|class|return|if|else|while|for|in|break|continue|import|as|try|catch|throw|print)\>"
+color brightmagenta "\<(and|or|not)\>"
+color brightcyan "\<(true|false|null|this)\>"
+color brightyellow "\<[0-9]+(\.[0-9]+)?\>"
+color green "\"(\\.|[^\"\\])*\""
+color magenta "=>"
+color cyan "[-+*/%=<>!]+"
+color red "\<(init)\>"
+color brightblack "#.*$"

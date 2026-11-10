@@ -1,0 +1,16 @@
+struct Env{char**keys;Value*vals;int n,cap;Env*parent;char*ik[4];Value iv[4];};static Env* env_new(Env*p){Env*e=calloc(1,sizeof(Env));e->parent=p;e->keys=e->ik;e->vals=e->iv;e->cap=4;return e;}static void env_release(Env*e){if(e->keys!=e->ik){free(e->keys);free(e->vals);}free(e);}
+static int find(Env*e,const char*k){for(int i=0;i<e->n;i++)if(e->keys[i]==k||(e->keys[i][0]==k[0]&&!strcmp(e->keys[i],k)))return i;return -1;}static void define(Env*e,const char*k,Value v){int i=find(e,k);if(i>=0){e->vals[i]=v;return;}if(e->n==e->cap){int nc=e->cap*2;char**nk=malloc(nc*sizeof(char*));Value*nv=malloc(nc*sizeof(Value));memcpy(nk,e->keys,e->n*sizeof(char*));memcpy(nv,e->vals,e->n*sizeof(Value));if(e->keys!=e->ik){free(e->keys);free(e->vals);}e->keys=nk;e->vals=nv;e->cap=nc;}e->keys[e->n]=(char*)k;e->vals[e->n++]=v;}static Value get(Env*e,const char*k){for(;e;e=e->parent){int i=find(e,k);if(i>=0)return e->vals[i];}rt_err("undefined name '%s'\n",k);exit(3);}static void set(Env*e,const char*k,Value v){for(;e;e=e->parent){int i=find(e,k);if(i>=0){e->vals[i]=v;return;}}rt_err("undefined name '%s'\n",k);exit(3);}
+static int call_depth=0;static bool returning=false;static Value retvalue;static int loop_signal=0;static int loop_depth=0;static int loop_floor=0;
+static Value eval(Node*n,Env*e);
+static Value list_value(void){Value v={.t=V_LIST,.list=calloc(1,sizeof(List))};return v;}
+static Value dict_value(void){Value v={.t=V_DICT,.dict=calloc(1,sizeof(Dict))};return v;}
+static void list_push(List*l,Value v){if(l->len==l->cap){l->cap=l->cap?l->cap*2:8;l->items=realloc(l->items,l->cap*sizeof(Value));}l->items[l->len++]=v;}
+static long list_index(Value idx,size_t len){if(idx.t!=V_NUM||floor(idx.n)!=idx.n){rt_err("list index must be an integer\n");exit(3);}long i=(long)idx.n;if(i<0)i+=(long)len;if(i<0||(size_t)i>=len){rt_err("list index out of range\n");exit(3);}return i;}
+static long dict_find(Dict*d,const char*k){for(size_t i=0;i<d->len;i++)if(!strcmp(d->keys[i],k))return (long)i;return -1;}
+static void dict_set(Dict*d,const char*k,Value v){long i=dict_find(d,k);if(i>=0){d->values[i]=v;return;}if(d->len==d->cap){d->cap=d->cap?d->cap*2:8;d->keys=realloc(d->keys,d->cap*sizeof(char*));d->values=realloc(d->values,d->cap*sizeof(Value));}d->keys[d->len]=strdup(k);d->values[d->len++]=v;}
+
+static Node* find_method(Class*c,const char*name){for(int i=0;i<c->mcount;i++)if(!strcmp(c->methods[i]->name,name))return c->methods[i];return NULL;}
+static Value bind_method(Class*c,Node*m,Value self){Env*menv=env_new(c->env);define(menv,"this",self);Func*f=calloc(1,sizeof(Func));f->names=m->params;f->count=m->pc;f->body=m->a;f->closure=menv;f->defaults=m->args;Value v={.t=V_FUNC,.f=f};return v;}
+static Value instance_new(Class*c){Instance*in=calloc(1,sizeof(Instance));in->cls=c;in->fields=dict_value();Value v={.t=V_INST,.ptr=in};return v;}
+static Value instance_member(Value self,const char*name){Instance*in=self.ptr;long i=dict_find(in->fields.dict,name);if(i>=0)return in->fields.dict->values[i];Node*m=find_method(in->cls,name);if(m)return bind_method(in->cls,m,self);rt_err("instance of %s has no member '%s'\n",in->cls->name,name);return nul();}
+static bool env_has(Env*e,const char*k){for(;e;e=e->parent)if(find(e,k)>=0)return true;return false;}

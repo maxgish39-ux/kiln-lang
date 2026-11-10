@@ -1,0 +1,4 @@
+let message = "Hello from an imported Kiln module"
+fun twice(value) {
+    return value * 2
+}

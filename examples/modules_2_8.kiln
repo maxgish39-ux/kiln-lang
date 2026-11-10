@@ -1,0 +1,23 @@
+# Kiln 2.8.0: chained methods, map/filter/reduce, and the json, path and time modules
+import "json" as json
+import "path" as path
+import "time" as time
+
+fun square(x) { return x * x }
+fun is_odd(x) { return x % 2 == 1 }
+fun add(a, b) { return a + b }
+
+let total = [1, 2, 3, 4, 5].map(square).filter(is_odd).reduce(add, 0)
+print("Sum of odd squares: " + str(total))
+
+let config = {"app": "notes", "limits": [10, 20]}
+let saved = json.encode(config)
+print("Saved: " + saved)
+let loaded = json.decode(saved)
+print("Loaded app: " + loaded["app"])
+
+print("Path: " + path.join("projects", "kiln/main.kiln"))
+print("Extension: " + path.extension("kiln/main.kiln"))
+
+let started = time.now()
+print("Clock is running: " + str(started > 0))

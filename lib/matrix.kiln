@@ -1,0 +1,103 @@
+# matrix: small dense matrices and vectors, stored as lists of rows.
+#   import "matrix" as matrix
+
+fun zeros(rows, cols) {
+    let m = []
+    for (let r in range_list(0, rows)) {
+        let row = []
+        for (let c in range_list(0, cols)) {
+            row.append(0)
+        }
+        m.append(row)
+    }
+    return m
+}
+
+fun range_list(start, stop) {
+    let out = []
+    let i = start
+    while i < stop {
+        out.append(i)
+        i = i + 1
+    }
+    return out
+}
+
+fun identity(n) {
+    let m = zeros(n, n)
+    for (let i in range_list(0, n)) {
+        m[i][i] = 1
+    }
+    return m
+}
+
+fun shape(m) {
+    if len(m) == 0 {
+        return [0, 0]
+    }
+    return [len(m), len(m[0])]
+}
+
+fun transpose(m) {
+    let dims = shape(m)
+    let out = zeros(dims[1], dims[0])
+    for (let r in range_list(0, dims[0])) {
+        for (let c in range_list(0, dims[1])) {
+            out[c][r] = m[r][c]
+        }
+    }
+    return out
+}
+
+fun add(a, b) {
+    if shape(a) != shape(b) {
+        throw "matrix.add needs matrices of the same shape"
+    }
+    let out = zeros(len(a), len(a[0]))
+    for (let r in range_list(0, len(a))) {
+        for (let c in range_list(0, len(a[0]))) {
+            out[r][c] = a[r][c] + b[r][c]
+        }
+    }
+    return out
+}
+
+fun scale(m, k) {
+    let out = zeros(len(m), len(m[0]))
+    for (let r in range_list(0, len(m))) {
+        for (let c in range_list(0, len(m[0]))) {
+            out[r][c] = m[r][c] * k
+        }
+    }
+    return out
+}
+
+fun multiply(a, b) {
+    let sa = shape(a)
+    let sb = shape(b)
+    if sa[1] != sb[0] {
+        throw "matrix.multiply: columns of the first matrix must equal rows of the second"
+    }
+    let out = zeros(sa[0], sb[1])
+    for (let r in range_list(0, sa[0])) {
+        for (let c in range_list(0, sb[1])) {
+            let total = 0
+            for (let k in range_list(0, sa[1])) {
+                total = total + a[r][k] * b[k][c]
+            }
+            out[r][c] = total
+        }
+    }
+    return out
+}
+
+fun dot(u, v) {
+    if len(u) != len(v) {
+        throw "matrix.dot needs vectors of the same length"
+    }
+    let total = 0
+    for (let i in range_list(0, len(u))) {
+        total = total + u[i] * v[i]
+    }
+    return total
+}

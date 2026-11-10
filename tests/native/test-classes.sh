@@ -3,8 +3,8 @@ set -eu
 ROOT="$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)"
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
-cc -std=c11 -O2 -Wall -Wextra -Werror "$ROOT/runtime/mint.c" -lm -o "$TMP/mint"
-cat > "$TMP/classes.mint" <<'MINT'
+cc -std=c11 -O2 -Wall -Wextra -Werror "$ROOT/runtime/kiln.c" -lm -o "$TMP/kiln"
+cat > "$TMP/classes.kiln" <<'Kiln'
 class Person {
     fun init(name, age) {
         this.name = name
@@ -50,7 +50,7 @@ print(c["count"])
 let g = a.greet
 print(g())
 print(type(Empty()))
-MINT
+Kiln
 expected='Hello, Ada (36)
 37
 37
@@ -63,14 +63,14 @@ instance
 3
 Hello, Ada
 instance'
-actual="$("$TMP/mint" "$TMP/classes.mint")"
+actual="$("$TMP/kiln" "$TMP/classes.kiln")"
 if [ "$actual" != "$expected" ]; then
     echo "class test output mismatch" >&2
     printf 'expected:\n%s\nactual:\n%s\n' "$expected" "$actual" >&2
     exit 1
 fi
-printf 'class P {\n fun init(x) { this.x = x }\n}\nlet p = P(1)\nprint(p.nope)\n' > "$TMP/bad.mint"
-if "$TMP/mint" "$TMP/bad.mint" 2>"$TMP/err.txt"; then
+printf 'class P {\n fun init(x) { this.x = x }\n}\nlet p = P(1)\nprint(p.nope)\n' > "$TMP/bad.kiln"
+if "$TMP/kiln" "$TMP/bad.kiln" 2>"$TMP/err.txt"; then
     echo "expected a runtime error for a missing member" >&2
     exit 1
 fi

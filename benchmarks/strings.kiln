@@ -1,0 +1,7 @@
+let out = ""
+let i = 0
+while i < 20000 {
+    out = out + "x"
+    i = i + 1
+}
+print(len(out))

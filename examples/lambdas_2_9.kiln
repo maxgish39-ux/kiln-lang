@@ -1,0 +1,19 @@
+# Kiln 2.9.0: lambda expressions, closures, and file lines
+import "fs" as fs
+
+let prices = [4, 12, 7, 20]
+let with_tax = prices.map(fun(p) => p * 1.2)
+print("With tax: " + with_tax.join(", "))
+
+let threshold = 10
+let expensive = prices.filter(fun(p) => p > threshold)
+print("Over " + str(threshold) + ": " + expensive.join(", "))
+
+let make_multiplier = fun(factor) => fun(x) => x * factor
+let triple = make_multiplier(3)
+print("Triple 7 is " + str(triple(7)))
+
+fs.write("lambdas_demo.txt", "apples\nbananas\ncherries\n")
+let fruit = fs.lines("lambdas_demo.txt")
+print("Fruit count: " + str(len(fruit)))
+print(fruit.map(fun(f) => f.upper()).join(" | "))

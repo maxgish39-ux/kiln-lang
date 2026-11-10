@@ -3,8 +3,8 @@ set -eu
 ROOT="$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)"
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
-cc -std=c11 -O2 -Wall -Wextra -Werror "$ROOT/runtime/mint.c" -lm -o "$TMP/mint"
-cat > "$TMP/features.mint" <<'MINT'
+cc -std=c11 -O2 -Wall -Wextra -Werror "$ROOT/runtime/kiln.c" -lm -o "$TMP/kiln"
+cat > "$TMP/features.kiln" <<'Kiln'
 import "string" as s
 
 import "math" as math
@@ -31,7 +31,7 @@ nums.clear()
 print(len(nums))
 let r = math.random(1, 6)
 print(r >= 1 and r <= 6)
-MINT
+Kiln
 expected='true
 true
 true
@@ -48,7 +48,7 @@ true
 -1
 0
 true'
-actual="$("$TMP/mint" "$TMP/features.mint")"
+actual="$("$TMP/kiln" "$TMP/features.kiln")"
 if [ "$actual" != "$expected" ]; then
     echo "Feature test failed:" >&2
     echo "$actual" >&2

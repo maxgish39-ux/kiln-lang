@@ -1,0 +1,8 @@
+# SQLite is an optional native Kiln module.
+import "sqlite" as sqlite
+let db = sqlite.open("kiln-demo.db")
+db.exec("CREATE TABLE IF NOT EXISTS notes (id INTEGER PRIMARY KEY, body TEXT)")
+db.exec("INSERT INTO notes (body) VALUES ('Hello from native Kiln')")
+print(db.scalar("SELECT body FROM notes ORDER BY id DESC LIMIT 1"))
+print(db.last_id())
+db.close()

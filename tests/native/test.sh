@@ -3,8 +3,8 @@ set -eu
 ROOT="$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)"
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
-cc -std=c11 -O2 "$ROOT/runtime/mint.c" -lm -o "$TMP/mint"
-cat > "$TMP/check.mint" <<'MINT'
+cc -std=c11 -O2 "$ROOT/runtime/kiln.c" -lm -o "$TMP/kiln"
+cat > "$TMP/check.kiln" <<'Kiln'
 import "math" as math
 import "string" as text
 fun fact(n) {
@@ -18,14 +18,14 @@ while i < 3 {
 }
 print(fact(5))
 print(math.sqrt(81))
-print(text.upper("mint"))
+print(text.upper("kiln"))
 let nums = [10, 20, 30]
 nums[1] = 25
 nums.append(40)
 print(nums[1])
 print(nums.pop())
 print(len(nums))
-let user = {"name": "MINT", "level": 2}
+let user = {"name": "KILN", "level": 2}
 user["level"] = 3
 user.set("active", true)
 print(user["name"])
@@ -39,7 +39,7 @@ for (let n in range(1, 6)) {
     total = total + n
 }
 print(total)
-let letters = "mint"
+let letters = "kiln"
 for (let ch in letters) { print(ch) }
 let record = {"first": 1, "second": 2}
 for (let key in record) { print(key) }
@@ -59,34 +59,34 @@ for (let a in range(3)) {
     outer = outer + 1
 }
 print(outer)
-MINT
-OUT="$("$TMP/mint" "$TMP/check.mint")"
-EXPECTED="$(printf '0\n1\n2\n120\n9\nMINT\n25\n40\n3\nMINT\n3\ntrue\nlist\ndict\n12\nm\ni\nn\nt\nfirst\nsecond\n4\n[0, 1, 2, 3, 4]\n[5, 3, 1]\n3')"
+Kiln
+OUT="$("$TMP/kiln" "$TMP/check.kiln")"
+EXPECTED="$(printf '0\n1\n2\n120\n9\nKILN\n25\n40\n3\nKILN\n3\ntrue\nlist\ndict\n12\nk\ni\nl\nn\nfirst\nsecond\n4\n[0, 1, 2, 3, 4]\n[5, 3, 1]\n3')"
 [ "$OUT" = "$EXPECTED" ] || { printf 'Expected:\n%s\nGot:\n%s\n' "$EXPECTED" "$OUT" >&2; exit 1; }
-"$TMP/mint" --check "$TMP/check.mint" | grep -q 'parsed by native MINT'
-cat > "$TMP/helper.mint" <<'MINT'
+"$TMP/kiln" --check "$TMP/check.kiln" | grep -q 'parsed by native Kiln'
+cat > "$TMP/helper.kiln" <<'Kiln'
 let prefix = "module"
 fun greet(name) {
     return prefix + ": " + name
 }
-MINT
-cat > "$TMP/modules.mint" <<MINT
-import "$TMP/helper.mint" as helper
+Kiln
+cat > "$TMP/modules.kiln" <<Kiln
+import "$TMP/helper.kiln" as helper
 print(helper.prefix)
 print(helper.greet("works"))
-MINT
-MODULE_OUT="$("$TMP/mint" "$TMP/modules.mint")"
+Kiln
+MODULE_OUT="$("$TMP/kiln" "$TMP/modules.kiln")"
 [ "$MODULE_OUT" = "$(printf 'module\nmodule: works')" ] || {
     printf 'Module import test failed:\n%s\n' "$MODULE_OUT" >&2
     exit 1
 }
 echo 'Native runtime tests passed.'
 
-cat > "$TMP/bad-break.mint" <<'MINT'
+cat > "$TMP/bad-break.kiln" <<'Kiln'
 fun invalid() { break }
 for (let n in [1, 2]) { invalid() }
-MINT
-if "$TMP/mint" "$TMP/bad-break.mint" >/dev/null 2>&1; then
+Kiln
+if "$TMP/kiln" "$TMP/bad-break.kiln" >/dev/null 2>&1; then
     echo 'break inside a function incorrectly escaped into its caller loop.' >&2
     exit 1
 fi

@@ -1,0 +1,59 @@
+# stats: descriptive statistics for lists of numbers.
+#   import "stats" as stats
+
+import "math" as math
+
+fun total(xs) {
+    let t = 0
+    for (let x in xs) {
+        t = t + x
+    }
+    return t
+}
+
+fun mean(xs) {
+    if len(xs) == 0 {
+        throw "stats.mean needs at least one number"
+    }
+    return total(xs) / len(xs)
+}
+
+fun median(xs) {
+    if len(xs) == 0 {
+        throw "stats.median needs at least one number"
+    }
+    let s = sorted(xs)
+    let n = len(s)
+    if n % 2 == 1 {
+        return s[n // 2]
+    }
+    return (s[n // 2 - 1] + s[n // 2]) / 2
+}
+
+fun variance(xs) {
+    let m = mean(xs)
+    let acc = 0
+    for (let x in xs) {
+        acc = acc + (x - m) * (x - m)
+    }
+    return acc / len(xs)
+}
+
+fun stdev(xs) {
+    return math.sqrt(variance(xs))
+}
+
+fun minimum(xs) {
+    if len(xs) == 0 {
+        throw "stats.minimum needs at least one number"
+    }
+    return sorted(xs)[0]
+}
+
+fun maximum(xs) {
+    if len(xs) == 0 {
+        throw "stats.maximum needs at least one number"
+    }
+    let s = sorted(xs)
+    return s[len(s) - 1]
+}

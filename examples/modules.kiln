@@ -1,0 +1,4 @@
+# Import another .kiln file as a namespace.
+import "stdlib_demo.kiln" as demo
+print(demo.message)
+print(demo.twice(21))

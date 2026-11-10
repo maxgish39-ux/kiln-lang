@@ -1,0 +1,70 @@
+# csv: read and write comma-separated text, with quoted fields.
+#   import "csv" as csv
+
+fun parse_line(line) {
+    let fields = []
+    let field = ""
+    let quoted = false
+    let i = 0
+    while i < len(line) {
+        let c = line[i]
+        if quoted {
+            if c == "\"" {
+                if i + 1 < len(line) and line[i + 1] == "\"" {
+                    field = field + "\""
+                    i = i + 1
+                } else {
+                    quoted = false
+                }
+            } else {
+                field = field + c
+            }
+        } else {
+            if c == "\"" {
+                quoted = true
+            } else if c == "," {
+                fields.append(field)
+                field = ""
+            } else {
+                field = field + c
+            }
+        }
+        i = i + 1
+    }
+    fields.append(field)
+    return fields
+}
+
+fun parse(text) {
+    let rows = []
+    for (let line in text.split("\n")) {
+        if line != "" {
+            rows.append(parse_line(line))
+        }
+    }
+    return rows
+}
+
+fun quote_field(field) {
+    let needs = len(field.split(",")) > 1 or len(field.split("\"")) > 1
+    if needs {
+        return "\"" + field.replace("\"", "\"\"") + "\""
+    }
+    return field
+}
+
+fun format_row(fields) {
+    let parts = []
+    for (let f in fields) {
+        parts.append(quote_field(str(f)))
+    }
+    return parts.join(",")
+}
+
+fun format(rows) {
+    let lines = []
+    for (let row in rows) {
+        lines.append(format_row(row))
+    }
+    return lines.join("\n") + "\n"
+}

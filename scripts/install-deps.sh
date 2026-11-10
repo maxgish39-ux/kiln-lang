@@ -1,5 +1,5 @@
 #!/bin/sh
-# Installs the system packages MINT needs on Debian, Ubuntu and Linux Mint.
+# Installs the system packages Kiln needs on Debian, Ubuntu and Linux Kiln.
 #
 #   ./scripts/install-deps.sh          compiler, make, curl, pkg-config, SQLite headers
 #   ./scripts/install-deps.sh --gui    also the graphics libraries for the raylib GUI
@@ -17,7 +17,7 @@ for arg in "$@"; do
 done
 
 if ! command -v apt-get >/dev/null 2>&1; then
-    echo "MINT's dependency installer needs apt (Linux Mint, Ubuntu or Debian)." >&2
+    echo "Kiln's dependency installer needs apt (Linux Kiln, Ubuntu or Debian)." >&2
     echo "On other systems install: a C11 compiler, make, curl, pkg-config and SQLite headers." >&2
     exit 1
 fi
@@ -32,8 +32,8 @@ if [ "$(id -u)" -ne 0 ]; then
     SUDO="sudo"
 fi
 
-echo "MINT: installing packages: $PKGS"
+echo "Kiln: installing packages: $PKGS"
 $SUDO apt-get update
 # shellcheck disable=SC2086
 $SUDO apt-get install -y $PKGS
-echo "MINT: system dependencies installed."
+echo "Kiln: system dependencies installed."

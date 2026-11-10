@@ -1,0 +1,80 @@
+# text: string helpers written in Kiln.
+#   import "text" as text
+
+fun repeat_text(piece, times) {
+    let out = ""
+    let i = 0
+    while i < times {
+        out = out + piece
+        i = i + 1
+    }
+    return out
+}
+
+fun pad_left(s, width, fill) {
+    let need = width - len(s)
+    if need <= 0 {
+        return s
+    }
+    return repeat_text(fill, need) + s
+}
+
+fun pad_right(s, width, fill) {
+    let need = width - len(s)
+    if need <= 0 {
+        return s
+    }
+    return s + repeat_text(fill, need)
+}
+
+fun is_blank(s) {
+    return s.trim() == ""
+}
+
+fun capitalize(word) {
+    if len(word) == 0 {
+        return word
+    }
+    let rest = ""
+    let i = 1
+    while i < len(word) {
+        rest = rest + word[i]
+        i = i + 1
+    }
+    return word[0].upper() + rest
+}
+
+fun words(s) {
+    let out = []
+    for (let w in s.split(" ")) {
+        if w != "" {
+            out.append(w)
+        }
+    }
+    return out
+}
+
+fun title_case(s) {
+    let out = []
+    for (let w in words(s)) {
+        out.append(capitalize(w.lower()))
+    }
+    return out.join(" ")
+}
+
+fun reverse_text(s) {
+    let out = ""
+    let i = len(s) - 1
+    while i >= 0 {
+        out = out + s[i]
+        i = i - 1
+    }
+    return out
+}
+
+fun count_occurrences(s, part) {
+    if part == "" {
+        return 0
+    }
+    return len(s.split(part)) - 1
+}

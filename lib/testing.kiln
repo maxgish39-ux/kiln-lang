@@ -1,0 +1,35 @@
+# testing: tiny assertion helpers written in Kiln.
+#   import "testing" as testing
+#   testing.check("adds", 1 + 1 == 2)
+#   testing.equal("length", len("kiln"), 4)
+#   testing.summary()
+
+let passed = 0
+let failed = 0
+
+fun check(label, ok) {
+    if ok {
+        passed = passed + 1
+        print("PASS " + label)
+    } else {
+        failed = failed + 1
+        print("FAIL " + label)
+    }
+    return ok
+}
+
+fun equal(label, actual, expected) {
+    if actual == expected {
+        passed = passed + 1
+        print("PASS " + label)
+        return true
+    }
+    failed = failed + 1
+    print("FAIL " + label + ": expected " + str(expected) + " but got " + str(actual))
+    return false
+}
+
+fun summary() {
+    print("passed " + str(passed) + ", failed " + str(failed))
+    return failed == 0
+}

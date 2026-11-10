@@ -3,8 +3,8 @@ set -eu
 ROOT="$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)"
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
-cc -std=c11 -O2 -Wall -Wextra -Werror "$ROOT/runtime/mint.c" -lm -o "$TMP/mint"
-cat > "$TMP/modules.mint" <<'MINT'
+cc -std=c11 -O2 -Wall -Wextra -Werror "$ROOT/runtime/kiln.c" -lm -o "$TMP/kiln"
+cat > "$TMP/modules.kiln" <<'Kiln'
 import "json" as json
 import "path" as path
 import "time" as time
@@ -23,15 +23,15 @@ print(nums.min())
 print(nums.max())
 print("  shout  ".trim().upper())
 print("ab".repeat(3))
-let data = {"name": "MINT", "tags": ["fast", "small"], "version": 2.7, "ok": true, "none": null}
+let data = {"name": "Kiln", "tags": ["fast", "small"], "version": 2.7, "ok": true, "none": null}
 print(json.encode(data))
 print(json.decode(json.encode(data))["tags"].join("/"))
-print(path.join("/home/user", "mint"))
+print(path.join("/home/user", "kiln"))
 print(path.basename("/a/b/c.txt"))
 print(path.dirname("/a/b/c.txt"))
 print(path.extension("/a/b/c.txt"))
 print(time.now() > 1000000)
-MINT
+Kiln
 expected='2,4,6,8,10,12
 2,4,6
 21
@@ -43,14 +43,14 @@ false
 6
 SHOUT
 ababab
-{"name":"MINT","tags":["fast","small"],"version":2.7,"ok":true,"none":null}
+{"name":"Kiln","tags":["fast","small"],"version":2.7,"ok":true,"none":null}
 fast/small
-/home/user/mint
+/home/user/kiln
 c.txt
 /a/b
 .txt
 true'
-actual="$("$TMP/mint" "$TMP/modules.mint")"
+actual="$("$TMP/kiln" "$TMP/modules.kiln")"
 if [ "$actual" != "$expected" ]; then
     echo "Module test failed:" >&2
     echo "$actual" >&2

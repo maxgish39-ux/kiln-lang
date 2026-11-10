@@ -1,0 +1,85 @@
+# collections: list helpers written in Kiln.
+#   import "collections" as collections
+
+fun unique(items) {
+    let out = []
+    for (let x in items) {
+        if out.contains(x) == false {
+            out.append(x)
+        }
+    }
+    return out
+}
+
+fun flatten(lists) {
+    let out = []
+    for (let inner in lists) {
+        for (let x in inner) {
+            out.append(x)
+        }
+    }
+    return out
+}
+
+fun range_list(start, stop) {
+    let out = []
+    let i = start
+    while i < stop {
+        out.append(i)
+        i = i + 1
+    }
+    return out
+}
+
+fun chunk(items, size) {
+    let out = []
+    let i = 0
+    while i < len(items) {
+        let piece = []
+        let j = i
+        while j < i + size and j < len(items) {
+            piece.append(items[j])
+            j = j + 1
+        }
+        out.append(piece)
+        i = i + size
+    }
+    return out
+}
+
+fun zip_pairs(a, b) {
+    let out = []
+    let n = len(a)
+    if len(b) < n {
+        n = len(b)
+    }
+    let i = 0
+    while i < n {
+        out.append([a[i], b[i]])
+        i = i + 1
+    }
+    return out
+}
+
+fun count_where(items, test) {
+    let n = 0
+    for (let x in items) {
+        if test(x) {
+            n = n + 1
+        }
+    }
+    return n
+}
+
+fun count_each(items) {
+    let counts = {}
+    for (let x in items) {
+        let key = str(x)
+        if counts.has(key) {
+            counts[key] = counts[key] + 1
+        } else {
+            counts[key] = 1
+        }
+    }
+    return counts
+}

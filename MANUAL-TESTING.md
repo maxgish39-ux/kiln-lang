@@ -1,23 +1,25 @@
-# MINT 2.0 manual testing
+# Kiln 2.21.0 manual testing
 
-Run these from the extracted project directory on Linux Mint.
+Run these commands from the extracted project directory on Linux. The launcher builds the native C runtime when needed.
 
-1. `./mint1 --version` should print `MINT 2.0.0-native`.
-2. `./mint1 --check examples/native_runtime.mint` should report that the file parsed by native MINT.
-3. `./mint1 examples/native_runtime.mint` should print factorial, square-root and uppercase-string results.
-4. `./tests/native/test.sh` should print `Native runtime tests passed.`
-5. If built with SQLite, run `./mint1 examples/database.mint`; it should create a small local database and print a saved message.
+1. `./kiln1 --version` should print `Kiln 2.21.0-native`.
+2. `./kiln1 --check examples/native_runtime.kiln` should parse the example successfully.
+3. `./kiln1 examples/native_runtime.kiln` should run the native runtime example.
+4. `make test` runs the native test suites, including VM, language, text, filesystem, networking, libraries and optional integrations available in the environment.
+5. `make install-check` checks the install layout and runs an installed-program smoke test.
+6. If SQLite development files are installed, `make sqlite` builds SQLite support; then run `./kiln1 examples/database.kiln`.
 
-The native runtime currently does not render GUI windows or graphics. Those are not tested by this release. The old Python GUI examples still use the legacy interpreter and Tkinter.
+## Optional raylib GUI
 
-
-## Native raylib GUI (2.6.0)
-
-This test requires raylib development files discoverable by `pkg-config` and a desktop session:
+A desktop session and the raylib build dependencies are required:
 
 ```bash
 make raylib
-./mint1 examples/native_gui.mint
+./kiln1 examples/native_gui.kiln
 ```
 
-Expected: a window titled "MINT native GUI" opens, draws a dark background, text, a blue rectangle and an amber circle. Press Space to display the SPACE pressed label; close the window to exit. This visual test was not run in the automated build environment. The automated `tests/native/test-raylib-stub.sh` checks the MINT-to-raylib call bridge against a test double, not actual graphics rendering.
+The GUI test double (`tests/native/test-raylib-stub.sh`) checks the native binding calls without opening a real window. It does not replace a manual visual test on a desktop.
+
+## Benchmarks
+
+Run `./benchmarks/run.sh` and see [`docs/PERFORMANCE.md`](docs/PERFORMANCE.md). For meaningful comparisons, use the same machine, compiler settings and benchmark scripts, and repeat runs under similar system load.

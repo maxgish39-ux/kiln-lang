@@ -1,11 +1,19 @@
 
-# MINT native build outputs
-*.mint-build.c
-*.mintc
+# KILN native build outputs
+*.kiln-build.c
+*.kilnc
 
 # Native build output
-bin/mint
+bin/kiln
 
 # Python cache from the legacy compatibility implementation
 __pycache__/
-mint/__pycache__/
+kiln/__pycache__/
+
+# Generated native builds and downloaded dependencies
+/bin/
+/third_party/raylib/
+*.o
+*.a
+*.so
+*.out

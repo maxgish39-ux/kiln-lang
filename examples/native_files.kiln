@@ -1,0 +1,4 @@
+import "fs" as fs
+fs.write("kiln-native-output.txt", "Created by Kiln's native filesystem module.\n")
+print(fs.read("kiln-native-output.txt"))
+print(fs.exists("kiln-native-output.txt"))

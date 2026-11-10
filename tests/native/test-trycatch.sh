@@ -3,8 +3,8 @@ set -eu
 ROOT="$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)"
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
-cc -std=c11 -O2 -Wall -Wextra -Werror "$ROOT/runtime/mint.c" -lm -o "$TMP/mint"
-cat > "$TMP/trycatch.mint" <<'MINT'
+cc -std=c11 -O2 -Wall -Wextra -Werror "$ROOT/runtime/kiln.c" -lm -o "$TMP/kiln"
+cat > "$TMP/trycatch.kiln" <<'Kiln'
 try {
     print(missing_name)
 } catch (e) {
@@ -51,21 +51,21 @@ try {
 } catch {
     print("bare catch ok")
 }
-MINT
+Kiln
 expected="caught: undefined name 'missing_name'
 10
 fallback (too big: 5)
 total 202 i 5
 rethrown inner
 bare catch ok"
-actual="$("$TMP/mint" "$TMP/trycatch.mint")"
+actual="$("$TMP/kiln" "$TMP/trycatch.kiln")"
 if [ "$actual" != "$expected" ]; then
     echo "try/catch output mismatch" >&2
     printf 'expected:\n%s\nactual:\n%s\n' "$expected" "$actual" >&2
     exit 1
 fi
-printf 'print("before")\nprint(nothere)\n' > "$TMP/uncaught.mint"
-if "$TMP/mint" "$TMP/uncaught.mint" >"$TMP/out.txt" 2>"$TMP/err.txt"; then
+printf 'print("before")\nprint(nothere)\n' > "$TMP/uncaught.kiln"
+if "$TMP/kiln" "$TMP/uncaught.kiln" >"$TMP/out.txt" 2>"$TMP/err.txt"; then
     echo "uncaught error should exit with failure" >&2
     exit 1
 fi

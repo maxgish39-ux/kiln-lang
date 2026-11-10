@@ -1,0 +1,90 @@
+# numbers: integer helpers written in Kiln.
+#   import "numbers" as numbers
+
+fun is_even(n) {
+    return n % 2 == 0
+}
+
+fun is_odd(n) {
+    return n % 2 != 0
+}
+
+fun gcd(a, b) {
+    if a < 0 {
+        a = 0 - a
+    }
+    if b < 0 {
+        b = 0 - b
+    }
+    while b != 0 {
+        let t = b
+        b = a % b
+        a = t
+    }
+    return a
+}
+
+fun lcm(a, b) {
+    if a == 0 or b == 0 {
+        return 0
+    }
+    return a / gcd(a, b) * b
+}
+
+fun factorial(n) {
+    let result = 1
+    let i = 2
+    while i <= n {
+        result = result * i
+        i = i + 1
+    }
+    return result
+}
+
+fun fibonacci(n) {
+    let a = 0
+    let b = 1
+    let i = 0
+    while i < n {
+        let t = a + b
+        a = b
+        b = t
+        i = i + 1
+    }
+    return a
+}
+
+fun is_prime(n) {
+    if n < 2 {
+        return false
+    }
+    let i = 2
+    while i * i <= n {
+        if n % i == 0 {
+            return false
+        }
+        i = i + 1
+    }
+    return true
+}
+
+fun primes_up_to(limit) {
+    let out = []
+    let n = 2
+    while n <= limit {
+        if is_prime(n) {
+            out.append(n)
+        }
+        n = n + 1
+    }
+    return out
+}
+
+fun digit_sum(n) {
+    let total = 0
+    while n > 0 {
+        total = total + n % 10
+        n = (n - n % 10) / 10
+    }
+    return total
+}
